@@ -12,7 +12,8 @@ resource "aws_ssm_parameter" "grafana_admin_password" {
 }
 
 module "scout" {
-  source                          = "../scout" ## Requires access to scout repo on badger-finance
+  #source = "../scout/terraform/aws"
+  source                          = "git@github.com:Badger-Finance/scout//terraform/aws" ## Requires access to scout repo on badger-finance
   ethnode_url_ssm_parameter_name  = "/DevOps4Defi/ethnode_url"
   region                          = "us-east-1"
   route53_root_fqdn               = module.baseline.route53_root_fqdn
@@ -20,6 +21,7 @@ module "scout" {
   public_subnet_ids               = module.baseline.public_subnet_ids
   prometheus_docker_image         = "bleibig/scout_prometheus"
   scout_docker_image              = "bleibig/scout_scout"
+  instance_type = "t3.xlarge"
   grafana_docker_image            = "bleibig/scout_grafana"
   aws_keypair_name                = "ben.leibig@gmail.com"
   grafana_admin_password_ssm_name = aws_ssm_parameter.grafana_admin_password.name
